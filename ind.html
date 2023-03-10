@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vimeo Video Player</title>
+</head>
+<body>
+
+  <div id="vimeo-player"></div>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+ 
+    <iframe title="vimeo-player" src="" width="640" height="360" frameborder="0"    allowfullscreen></iframe>
+   
+  <script>
+
+    // Initialize the Vimeo player
+   
+    var options = {
+     
+      id: 541416221,
+      autopause: 0,
+      autoplay: 1,
+      muted: 0
+    };
+    
+    var player = new Vimeo.Player('vimeo-player', options);
+    
+    const video = document.getElementById('vimeo-player');
+const status = document.getElementById('status');
+
+video.addEventListener('player', function() {
+  status.innerHTML = 'Video played to completion';
+});
+
+   
+
+    // Listen for the timeupdate event and log the progress every 5 seconds
+    var progressInterval = setInterval(function() {
+      player.getCurrentTime().then(function(seconds) {
+        player.getDuration().then(function(duration) {
+          var percent = (seconds / duration) * 100;
+          console.log('Current time: ' + seconds + 's');
+          console.log('Total time: ' + duration + 's');
+          console.log('Progress: ' + percent + '%');
+        });
+      });
+    }, 5000);
+
+    
+// Listen for when the video is played or paused
+player.on('play', function() {
+  console.log('Video started playing');
+});
+
+player.on('pause', function() {
+  console.log('Video paused');
+});
+
+// Listen for when the user seeks in the video
+player.on('seeked', function(data) {
+  console.log('Current time:', data.seconds, 'seconds');
+});
+
+// Listen for when the video ends
+player.on('ended', function() {
+  console.log('Video played completed');
+  
+  // Clear the progress interval
+  clearInterval(progressInterval);
+});
+
+    
+  </script>
+</body>
+</html>
